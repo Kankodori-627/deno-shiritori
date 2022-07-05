@@ -1,3 +1,38 @@
+.divArea{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:  100vw;
+    height: 100vh;
+    background-color: #ffe9a7;
+    opacity: 0.4;
+    z-index: -1;
+}
+.color-greenyellow{
+    background-color: greenyellow;
+}
+.color-skyblue{
+    background-color: skyblue;
+}
+.color-orange{
+    background-color: orange;
+}
+.color-purple{
+    background-color: purple;
+}
 body{
-    background: skyblue;
+    background-color: white;
+}
+.ZigZag3D{
+    background: 
+    linear-gradient(135deg, #ffc10755 25%, transparent 25%) -20px 0/ 40px 40px, 
+    linear-gradient(225deg, #ffc107 25%, transparent 25%) -20px 0/ 40px 40px, 
+    linear-gradient(315deg, #ffc10755 25%,transparent 25%) 0px 0/ 40px 40px, 
+    linear-gradient(45deg, #ffc107 25%, #ffe9a7 25%) 0px 0/ 40px 40px;
+}
+p {
+    font-family: "Kokoro";
+}
+h1{
+    font-family: "Kokoro";
 }

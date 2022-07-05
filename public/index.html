@@ -2,23 +2,64 @@
 <html>
 
 <head>
+    <title>しりとりゲーム!</title>
     <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/earlyaccess/kokoro.css" rel = "stylesheet">
+    
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="divArea ZigZag3D"></div>
     <h1>しりとり</h1>
+    <p>最初の文字列はランダムなひらがなです</p>
     <p id = "previousWord"></p>
+    <p id = "result"></p>
+    <p id = "playerName"></p>
     <input id = "nextWordInput" type = "text" />
+ 
+
     <button id = "nextWordSendButton">送信</button>
-    <script type = "module">
-        window.onload = async (event) => {
+    <button id = "retryButton">お手上げ</button>
+    <!-- <button onclick="funcRireki()">単語履歴</button> -->
+    <div id ="rirekitango"></div>
+    <!-- <button id = "multiPlayButton">4人マルチプレイ(オフライン)</button> -->
+
+
+
+    <script type = "module"> 
+        let tangorireki = [];
+        let multi = false;
+        let multiPN = 0;
+        let i = 0;       
+    // function changeColor(colornumber){
+    //         switch(colornumber){
+    //             case 1:
+    //                 document.getElementById("ground").classList.add("color-greenyellow");
+    //                 break;
+    //             case 2:
+    //                 document.getElementById("ground").classList.add("color-skyblue");
+    //                 break;
+    //             case 3:
+    //                 document.getElementById("ground").classList.add("color-orange");
+    //                 break;
+    //             case 4:
+    //                 document.getElementById("ground").classList.add("color-purple");
+    //                 break;
+    //         }
+    //     }
+        
+        window.onload = async (event) => {//初期読み込み
             const response = await fetch ("/shiritori");
             const previousWord = await response.text();
-            
-            const para = document.querySelector("#previousWord");
-            para.innerText = `前の単語:${previousWord}`;
-        };
 
+            const para = document.querySelector("#previousWord");
+            const parat = document.querySelector("#result");
+            // const parar = document.querySelector("#rirekitango");
+        
+            para.innerText = `前の単語:${previousWord}`;
+            parat.innerText = `リレー回数:${String(tangorireki.length)}`;
+            // parar.innerText = `単語の履歴が表示されます`;
+        };
         document.querySelector("#nextWordSendButton").onclick = async (event) => {
             const nextWord = document.querySelector("#nextWordInput").value;
             const response = await fetch("/shiritori", {
@@ -26,15 +67,89 @@
                 headers: {"Content-Type" : "application/json"},
                 body: JSON.stringify({nextWord})
             });
-            if(response.status / 100 !== 2){//エラーまたは前の単語に続かない単語だとエラー表示
+            if(response.status / 100 !== 2){//エラー表示
                 alert(await response.text());
                 return;
             }
-            const previousWord = await response.text();
+            else if(multi){
+                // const name = document.querySelector("#playerName");
+                // if(multiPN >= 4){
+                //     multiP = 0;
+                // }
+                // multiPN++;
+                // switch(multiPN){
+                //     case 1:
+                //         let playerName = "プレイヤー1";
+                //         name.innerText = `${playerName}の番です`;
+                //         changeColor(multiPN);
+                //         break;
+                //     case 2:
+                //         playerName = "プレイヤー2";
+                //         name.innerText = `${playerName}の番です`;
+                //         changeColor(multiPN);
+                //         break;
+                //     case 3:
+                //         playerName = "プレイヤー3";
+                //         name.innerText = `${playerName}の番です`;
+                //         changeColor(multiPN);
+                //         break;
+                //     case 4:
+                //         playerName = "プレイヤー4";
+                //         name.innerText = `${playerName}の番です`;
+                //         changeColor(multiPN);
+                //         break;
+                // }
+                const previousWord = await response.text();
+                tangorireki[i] = previousWord;
+                i = i + 1;//入力されるたびにtangorirekiで取得
+                const para = document.querySelector("#previousWord");
+                const parat = document.querySelector("#result");
+                para.innerText = `前の単語:${previousWord}`;   
+                parat.innerText = `リザルト:${String(tangorireki.length)}`;
 
-            const para = document.querySelector("#previousWord");
-            para.innerText = `前の単語:${previousWord}`;
+            }
+            else{
+                const previousWord = await response.text();
+                tangorireki[i] = previousWord;
+                i = i + 1;
+                const para = document.querySelector("#previousWord");
+                const parat = document.querySelector("#result");
+                parat.innerText = `リレー回数:${String(tangorireki.length)}`;
+                para.innerText = `前の単語:${previousWord}`;
+            }
+
         };
+        document.querySelector("#retryButton").onclick = async (event) => {
+            const response = await fetch("/yarinaoshi", {
+                method: "POST"
+            });
+            if(response.status / 100 !== 2){
+                return;
+            }
+            i = 0;
+            multi = false;
+            tangorireki.length = 0;
+            const previousWord = await response.text();
+            const para = document.querySelector("#previousWord");
+            const parat = document.querySelector("#result");
+            para.innerText = `前の単語:${previousWord}`;
+            parat.innerText = `リザルト:${String(tangorireki.length)}`;
+        };
+        // document.querySelector("multiPlayButton").onclick = async(event) => {
+        //     multi = true;
+        // };       
+        function funcRireki(tangorireki){
+            const rireki = "";
+            if(i > 0){
+                for (let j = 0; j < i; j++){
+                    rireki += tangorireki[j];
+                }
+                const parar = document.querySelector("#rirekitango");
+                parar.innerText = `単語履歴:${rireki}`;
+            }
+        }
     </script>
+
+    
 </body>
 </html>
