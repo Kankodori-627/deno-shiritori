@@ -21,6 +21,9 @@
     background-color: purple;
 }
 body{
+    width: 700px;/*中央寄せ*/
+    margin-right: auto;
+    margin-left: auto;
     background-color: white;
 }
 .ZigZag3D{
@@ -35,4 +38,10 @@ p {
 }
 h1{
     font-family: "Kokoro";
+}
+.button{
+    text-align: center;
+}
+.input{
+    text-align: center;
 }
